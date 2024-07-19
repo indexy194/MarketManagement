@@ -1,10 +1,22 @@
-﻿@model List<Product>
+﻿@model ProductViewModel
 
 @section title {
     <h3>Products</h3>
 }
-
-@if (Model != null && Model.Count() > 0)
+<form method="post" asp-controller="products" asp-action="search" id="products">
+    <div class="row">
+        <div class="col-2">
+            <label asp-for="ProductName"></label>
+            <input type="text" class="form-control" asp-for="ProductName" />
+        </div>
+        <div class="col-2">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary form-control">Search</button>
+        </div>
+        
+    </div>
+</form>
+@if (Model != null && Model.Product != null)
 {
     <table class="table table-striped">
         <thead>
@@ -18,7 +30,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in Model)
+            @foreach (var product in Model.Products)
             {
                 <tr>    
                     <td>@product.Category?.Name</td>

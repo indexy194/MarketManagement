@@ -42,6 +42,13 @@ namespace Plugins.DataStore.SQL
             return db.Categories.Find(categoryId);
         }
 
+        public IEnumerable<Category> Search(string cateName)
+        {
+            if (cateName == null) return db.Categories.ToList();
+
+            return db.Categories.Where(x => x.Name.Contains(cateName)).ToList();
+        }
+
         public void UpdateCategory(int categoryId, Category category)
         {
             if (categoryId != category.CategoryId) return;

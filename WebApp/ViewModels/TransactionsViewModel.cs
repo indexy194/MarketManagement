@@ -6,7 +6,7 @@ namespace WebApp.ViewModels
     public class TransactionsViewModel
     {
         [Display(Name = "Cashier Name")]
-        public string? CashierName { get; set; }
+        public string CashierName { get; set; }
 
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; } = DateTime.Today;

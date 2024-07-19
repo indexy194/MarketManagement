@@ -65,5 +65,10 @@ namespace Plugins.DataStore.InMemory
                 _categories.Remove(category);
             }
         }
+
+        public IEnumerable<Category> Search(string cateName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

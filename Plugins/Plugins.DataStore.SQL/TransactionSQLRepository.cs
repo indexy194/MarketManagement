@@ -19,11 +19,12 @@ namespace Plugins.DataStore.SQL
             this.db = db;
         }
 
-        public void Add(string cashierName, int productId, string productName, double price, int beforeQty, int soldQty)
+        public void Add(string cashierName, string userId, int productId, string productName, double price, int beforeQty, int soldQty)
         {
             var transaction = new Transaction
             {
                 ProductId = productId,
+                UserId = userId,
                 ProductName = productName,
                 TimeStamp = DateTime.Now,
                 Price = price,
@@ -50,18 +51,25 @@ namespace Plugins.DataStore.SQL
             }
         }
 
+        public IEnumerable<Transaction> GetTransactions()
+        {
+            return db.Transactions.ToList();
+        }
+
         public IEnumerable<Transaction> Search(string cashierName, DateTime startDate, DateTime endDate)
         {
             if (string.IsNullOrWhiteSpace(cashierName))
             {
+                if (startDate.Date == endDate.Date) return db.Transactions.Where(x => x.TimeStamp.Date == endDate.Date);
                 return db.Transactions.Where(x => 
                     x.TimeStamp.Date >= startDate.Date && 
                     x.TimeStamp.Date <= endDate.Date);
             }
             else
             {
+                
                 return db.Transactions.Where(x =>
-                    EF.Functions.Like(x.CashierName, $"%{cashierName}%") &&
+                    x.CashierName.Contains(cashierName) &&
                     x.TimeStamp.Date >= startDate.Date &&
                     x.TimeStamp.Date <= endDate.Date);
             }

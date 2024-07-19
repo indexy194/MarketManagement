@@ -32,11 +32,12 @@ namespace Plugins.DataStore.InMemory
                     x.TimeStamp >= startDate.Date && x.TimeStamp <= endDate.Date.AddDays(1).Date);
         }
 
-        public  void Add(string cashierName, int productId, string productName, double price, int beforeQty, int soldQty)
+        public  void Add(string cashierName, string userId, int productId, string productName, double price, int beforeQty, int soldQty)
         {
             var transaction = new Transaction
             {
                 ProductId = productId,
+                UserId = userId,
                 ProductName = productName,
                 TimeStamp = DateTime.Now,
                 Price = price,
@@ -57,5 +58,7 @@ namespace Plugins.DataStore.InMemory
 
             transactions?.Add(transaction);
         }
+
+        public IEnumerable<Transaction> GetTransactions() => transactions;
     }
 }

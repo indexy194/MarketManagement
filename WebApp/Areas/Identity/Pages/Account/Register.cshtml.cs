@@ -98,7 +98,6 @@ namespace WebApp.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
             [Required]
             [Display(Name = "Select Type")]
             public MyTypeClaim TypeClaim { get; set; }
@@ -123,7 +122,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 //config type of claim
-                
+
 
                 if (result.Succeeded)
                 {
@@ -166,11 +165,9 @@ namespace WebApp.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
         private IdentityUser CreateUser()
         {
             try

@@ -9,5 +9,6 @@ namespace UseCases.DataStorePluginInterfaces
         IEnumerable<Category> GetCategories();
         Category? GetCategoryById(int categoryId);
         void UpdateCategory(int categoryId, Category category);
+        IEnumerable<Category> Search(string cateName);
     }
 }

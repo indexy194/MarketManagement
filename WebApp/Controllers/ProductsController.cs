@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using UseCases;
 using UseCases.CategoriesUseCases;
 using UseCases.DataStorePluginInterfaces;
+using UseCases.interfaces;
 using UseCases.ProductsUseCases;
 using WebApp.ViewModels;
 
@@ -18,26 +19,32 @@ namespace WebApp.Controllers
         private readonly IViewSelectedProductUseCase viewSelectedProductUseCase;
         private readonly IViewProductsUseCase viewProductsUseCase;
         private readonly IViewCategoriesUseCase viewCategoriesUseCase;
-        
+        private readonly ISearchProductUseCase searchProductUseCase;
+
         public ProductsController(
             IAddProductUseCase addProductUseCase,
             IEditProductUseCase editProductUseCase,
             IDeleteProductUseCase deleteProductUseCase,
             IViewSelectedProductUseCase viewSelectedProductUseCase,
             IViewProductsUseCase viewProductsUseCase,
-            IViewCategoriesUseCase viewCategoriesUseCase)
+            IViewCategoriesUseCase viewCategoriesUseCase,
+            ISearchProductUseCase searchProductUseCase)
         {
             this.addProductUseCase = addProductUseCase;
             this.editProductUseCase = editProductUseCase;
             this.deleteProductUseCase = deleteProductUseCase;
             this.viewSelectedProductUseCase = viewSelectedProductUseCase;
             this.viewProductsUseCase = viewProductsUseCase;
-            this.viewCategoriesUseCase = viewCategoriesUseCase;            
+            this.viewCategoriesUseCase = viewCategoriesUseCase;
+            this.searchProductUseCase = searchProductUseCase;
         }
 
         public IActionResult Index()
         {
-            var products = viewProductsUseCase.Execute(loadCategory: true);
+            var products = new ProductViewModel
+            {
+                Products = viewProductsUseCase.Execute(loadCategory: true)
+            };
             return View(products);
         }
 
@@ -52,7 +59,12 @@ namespace WebApp.Controllers
 
             return View(productViewModel);
         }
-
+        public IActionResult Search(ProductViewModel productViewModel)
+        {
+            var products = searchProductUseCase.Search(productViewModel.ProductName??string.Empty, loadCate: true);
+            productViewModel.Products = products;
+            return View("Index", productViewModel);
+        }
         [HttpPost]
         public IActionResult Add(ProductViewModel productViewModel)
         {

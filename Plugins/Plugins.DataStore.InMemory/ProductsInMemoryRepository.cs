@@ -118,5 +118,10 @@ namespace Plugins.DataStore.InMemory
             else
                 return new List<Product>();
         }
+
+        public IEnumerable<Product> GetProductsByName(string name, bool loadCategory = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

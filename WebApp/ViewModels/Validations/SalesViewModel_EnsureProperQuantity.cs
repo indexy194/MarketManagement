@@ -5,7 +5,7 @@ namespace WebApp.ViewModels.Validations
 {
     public class SalesViewModel_EnsureProperQuantity : ValidationAttribute
     {
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
             var salesViewModel = validationContext.ObjectInstance as SalesViewModel;
 

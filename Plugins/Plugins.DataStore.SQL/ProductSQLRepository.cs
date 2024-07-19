@@ -40,14 +40,14 @@ namespace Plugins.DataStore.SQL
                     .Include(x => x.Category)
                     .FirstOrDefault(x => x.ProductId == productId);
             else
-                return db.Products                    
+                return db.Products
                     .FirstOrDefault(x => x.ProductId == productId);
         }
 
         public IEnumerable<Product> GetProducts(bool loadCategory = false)
         {
             if (loadCategory)
-                return db.Products.Include( x => x.Category).OrderBy(x => x.CategoryId).ToList();
+                return db.Products.Include(x => x.Category).OrderBy(x => x.CategoryId).ToList();
             else
                 return db.Products.OrderBy(x => x.CategoryId).ToList();
         }
@@ -56,7 +56,19 @@ namespace Plugins.DataStore.SQL
         {
             return db.Products.Where(x => x.CategoryId == categoryId).ToList();
         }
+        public IEnumerable<Product> GetProductsByName(string name, bool loadCategory = false)
+        {
+            if (loadCategory)
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    return db.Products.Include(x => x.Category).OrderBy(x => x.CategoryId).ToList();
+                }
+                return db.Products.Where(x => x.Name.Contains(name)).Include(x => x.Category).OrderBy(x => x.CategoryId).ToList();
+            }
+            return db.Products.OrderBy(x => x.CategoryId).ToList();
 
+        }
         public void UpdateProduct(int productId, Product product)
         {
             if (productId != product.ProductId) return;

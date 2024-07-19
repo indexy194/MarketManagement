@@ -20,12 +20,13 @@ namespace UseCases
             this.productRepository = productRepository;            
         }
 
-        public void Execute(string cashierName, int productId, int qty)
+        public void Execute(string cashierName, string userId, int productId, int qty)
         {
             var product = productRepository.GetProductById(productId);
             if (product != null)
                 transactionRepository.Add(
                     cashierName, 
+                    userId,
                     productId, 
                     product.Name, 
                     product.Price.HasValue?product.Price.Value:0,

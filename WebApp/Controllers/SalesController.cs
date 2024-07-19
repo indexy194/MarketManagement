@@ -5,26 +5,32 @@ using UseCases.CategoriesUseCases;
 using UseCases;
 using Microsoft.AspNetCore.Authorization;
 using UseCases.ProductsUseCases;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApp.Controllers
 {
     [Authorize(Policy = "Cashiers")]
     public class SalesController : Controller
     {
+        private readonly UserManager<IdentityUser> userManager;
         private readonly IViewCategoriesUseCase viewCategoriesUseCase;
         private readonly IViewSelectedProductUseCase viewSelectedProductUseCase;
         private readonly ISellProductUseCase sellProductUseCase;
         private readonly IViewProductsInCategoryUseCase viewProductsInCategoryUseCase;
 
-        public SalesController(IViewCategoriesUseCase viewCategoriesUseCase,
+        public SalesController(
+            UserManager<IdentityUser> userManager,
+            IViewCategoriesUseCase viewCategoriesUseCase,
             IViewSelectedProductUseCase viewSelectedProductUseCase,
             ISellProductUseCase sellProductUseCase,
             IViewProductsInCategoryUseCase viewProductsInCategoryUseCase)
         {
+            this.userManager = userManager;
             this.viewCategoriesUseCase = viewCategoriesUseCase;
             this.viewSelectedProductUseCase = viewSelectedProductUseCase;
             this.sellProductUseCase = sellProductUseCase;
             this.viewProductsInCategoryUseCase = viewProductsInCategoryUseCase;
+
         }
 
         public IActionResult Index()
@@ -42,15 +48,22 @@ namespace WebApp.Controllers
             return PartialView("_SellProduct", product);
         }
 
-        public IActionResult Sell(SalesViewModel salesViewModel)
+        public async Task<IActionResult> Sell(SalesViewModel salesViewModel)
         {
             if (ModelState.IsValid)
             {
+                var entry = await userManager.GetUserAsync(User);
+                if(entry != null)
+                {
                 // Sell the product
-                sellProductUseCase.Execute(
-                    "cashier1",
-                    salesViewModel.SelectedProductId,
-                    salesViewModel.QuantityToSell);                
+                    var cashierName = User?.Identity?.Name;
+                    sellProductUseCase.Execute(
+                        cashierName,
+                        userId: entry.Id,
+                        salesViewModel.SelectedProductId,
+                        salesViewModel.QuantityToSell);
+                }
+                               
             }
 
             var product = viewSelectedProductUseCase.Execute(salesViewModel.SelectedProductId);

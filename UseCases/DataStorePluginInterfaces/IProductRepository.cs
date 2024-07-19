@@ -15,5 +15,6 @@ namespace UseCases.DataStorePluginInterfaces
         Product? GetProductById(int productId, bool loadCategory = false);
         void DeleteProduct(int productId);
         IEnumerable<Product> GetProductsByCategoryId(int categoryId);
+        public IEnumerable<Product> GetProductsByName(string name, bool loadCategory = false);
     }
 }
